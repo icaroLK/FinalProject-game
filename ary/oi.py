@@ -2,7 +2,7 @@ import pygame
 
 pygame.init()
 
-l = 1080
+l = 1280
 h = 640
 janela = pygame.display.set_mode((l, h))
 clock = pygame.time.Clock()
@@ -17,16 +17,17 @@ player = pygame.image.load("ary/imagens/nave.png")
 player_pos = player.get_rect(center=(l / 2, h / 2))
 
 life = pygame.image.load("ary/imagens/coracao.png")
+life_count = 5
 
 sec = 0
 count = 0
 font = pygame.font.Font(None, 42)
 
 p = []
-pew = pygame.image.load("ary/imagens/pew.png")
+picle = pygame.image.load("ary/imagens/pew.png")
 
-pew_dt = 0.5
-final_pew = 0
+picle_dt = 0.4
+final_picle = 0
 
 while running:
     dt = clock.tick(60) / 1000 
@@ -47,11 +48,10 @@ while running:
 
     if keys[pygame.K_SPACE]:
         time = pygame.time.get_ticks() / 1000
-        if time - final_pew > pew_dt:
-            projetil = pygame.Rect(player_pos.centerx, player_pos.top, 5,10)
+        if time - final_picle > picle_dt:
+            projetil = pygame.Rect(player_pos.centerx, player_pos.centery, 5,10)
             p.append(projetil)
-
-            final_pew = time
+            final_picle = time
 
     back_pos -= back_vel * dt
     if back_pos < -background.get_width():
@@ -67,7 +67,7 @@ while running:
 
     for tiro in p:
         tiro.x += 400 * dt
-        janela.blit(pew, tiro)
+        janela.blit(picle, tiro)
 
     if player_pos.left < 0:
         player_pos.left = 0
@@ -81,11 +81,11 @@ while running:
     sec += dt
     count = int(sec)
     text = font.render('' + str(count), True, (255, 255, 255))
-    janela.blit(text, (20,20))
+    janela.blit(text, (25,25))
 
 
-    for c in range(5):
-        janela.blit(life, (c*40+870,20))
+    for c in range(life_count):
+        janela.blit(life, (c*40+1050,25))
 
     pygame.display.flip()
 
