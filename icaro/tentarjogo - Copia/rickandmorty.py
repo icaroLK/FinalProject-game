@@ -206,9 +206,9 @@ while rodando:
 
 
     ####caixa de colisão ative para ver
-    # pygame.draw.rect(screen, (225, 0, 0), player_rect, 4)
-    # pygame.draw.rect(screen, (225, 0, 0), tiro_rect, 4)
-    # pygame.draw.rect(screen, (225, 0, 0), inimigo_rect, 4)
+    pygame.draw.rect(screen, (225, 0, 0), player_rect, 4)
+    pygame.draw.rect(screen, (225, 0, 0), tiro_rect, 4)
+    pygame.draw.rect(screen, (225, 0, 0), inimigo_rect, 4)
 
     score = font.render(f'Pontos: {int(pontos)} ', True, (0,0,0))
     screen.blit(score, (50,50))

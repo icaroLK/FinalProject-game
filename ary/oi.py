@@ -19,7 +19,7 @@ back_vel = 900
 player = pygame.image.load("ary/imagens/nave.png")
 player_pos = player.get_rect(center=(l / 2, h / 2))
 player_vel = 400
-
+player_hitbox = player_pos
 
 # inimigos
 enemies = []
@@ -28,6 +28,7 @@ enemy_pos = enemy.get_rect()
 enemy_vel = 500
 enemy_dt = 2
 last_enemy = 0 
+enemy_hitbox = enemy_pos
 
 # contador de vidas
 life = pygame.image.load("ary/imagens/coracao.png")
@@ -47,9 +48,8 @@ last_pickle = 0
 # projétieis inimigos
 pe = []
 pew = pygame.image.load("ary/imagens/pew.png")
-pew_dt = 1.2
+pew_dt = 1.5
 last_pew = 0
-
 
 # looping principal
 while running:
@@ -92,6 +92,7 @@ while running:
     janela.fill((0, 0, 0))
     janela.blit(superficie, (0, 0))
     janela.blit(player, player_pos)
+    pygame.draw.rect(janela, (255, 0, 0, 100), player_pos, width=1)
     
     # tiro
     for tiro in p:
@@ -103,6 +104,7 @@ while running:
     for enemy_pos in enemies:
         enemy_pos.x -= enemy_vel * dt
         janela.blit(enemy, enemy_pos)
+        pygame.draw.rect(janela, (255, 0, 0), enemy_pos, width=1)
 
     if time - last_enemy > enemy_dt:
         x = l
