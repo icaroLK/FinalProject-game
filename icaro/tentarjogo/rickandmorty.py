@@ -46,7 +46,13 @@ rodando = True
 # Escrever os pontos na tela
 font = pygame.font.SysFont('icaro/tentarjogo/fonts/Minecraft.ttf', 50)
 
-# Funções
+
+#escrever os pontos na tela
+font = pygame.font.SysFont('icaro/tentarjogo/fonts/Minecraft.ttf', 50)
+
+
+
+# funcoes
 def respawn():
     x = 1217
     y = random.randint(1, 680)
