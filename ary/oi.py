@@ -92,7 +92,7 @@ while running:
     janela.fill((0, 0, 0))
     janela.blit(superficie, (0, 0))
     janela.blit(player, player_pos)
-    pygame.draw.rect(janela, (255, 0, 0, 100), player_pos, width=1)
+    # pygame.draw.rect(janela, (255, 0, 0, 100), player_pos, width=1)
     
     # tiro
     for tiro in p:
@@ -104,7 +104,7 @@ while running:
     for enemy_pos in enemies:
         enemy_pos.x -= enemy_vel * dt
         janela.blit(enemy, enemy_pos)
-        pygame.draw.rect(janela, (255, 0, 0), enemy_pos, width=1)
+        # pygame.draw.rect(janela, (255, 0, 0), enemy_pos, width=1)
 
     if time - last_enemy > enemy_dt:
         x = l
@@ -123,7 +123,6 @@ while running:
         laser.x -= 950 * dt
         janela.blit(pew, laser)
         
-
     # borda
     if player_pos.left < 0:
         player_pos.left = 0
