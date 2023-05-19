@@ -13,13 +13,13 @@ running = True
 # fundo do jogo
 background = pygame.image.load("ary/imagens/espaco.png")
 back_pos = 0
-back_vel = 900
+back_vel = 1000
 
 # jogador
 player = pygame.image.load("ary/imagens/nave.png")
 player_pos = player.get_rect(center=(l / 2, h / 2))
 player_vel = 400
-player_hitbox = player_pos
+player_hitbox = player.get_rect()
 
 # inimigos
 enemies = []
@@ -28,7 +28,7 @@ enemy_pos = enemy.get_rect()
 enemy_vel = 500
 enemy_dt = 2
 last_enemy = 0 
-enemy_hitbox = enemy_pos
+enemy_hitbox = enemy.get_rect()
 
 # contador de vidas
 life = pygame.image.load("ary/imagens/coracao.png")
@@ -37,19 +37,26 @@ life_count = 3
 # contador de tempo
 sec = 0
 count = 0
-font = pygame.font.Font(None, 42)
+minutes = 0
+counter_font = pygame.font.Font("ary/Minecraft.ttf", 30)
 
 # projéteis
 p = []
 pickle = pygame.image.load("ary/imagens/pickle.png")
 pickle_dt = 0.5
 last_pickle = 0
+pickle_hitbox = pickle.get_rect()
 
 # projétieis inimigos
 pe = []
 pew = pygame.image.load("ary/imagens/pew.png")
 pew_dt = 1.5
 last_pew = 0
+pew_hitbox = pew.get_rect()
+
+# pontuação
+score = 0
+score_font = pygame.font.Font("ary/Minecraft.ttf", 30)
 
 # looping principal
 while running:
@@ -98,13 +105,27 @@ while running:
     for tiro in p:
         tiro.x += 600 * dt
         janela.blit(pickle, tiro)
-    
+
+        for enemy_pos in enemies:
+            if tiro.colliderect(enemy_pos):
+                enemies.remove(enemy_pos)
+                p.remove(tiro)
+                score += 1
+                if score == 30:
+                    running = False
     # inimigo
     time = pygame.time.get_ticks() / 1000
     for enemy_pos in enemies:
         enemy_pos.x -= enemy_vel * dt
         janela.blit(enemy, enemy_pos)
+        
+        # hitbox inimiga
         # pygame.draw.rect(janela, (255, 0, 0), enemy_pos, width=1)
+
+
+    enemy_hitbox.x = enemy_pos.x
+    enemy_hitbox.y = enemy_pos.y
+    # pygame.draw.rect(janela, (255, 0, 0), enemy_pos, width=1)
 
     if time - last_enemy > enemy_dt:
         x = l
@@ -122,7 +143,12 @@ while running:
     for laser in pe:
         laser.x -= 950 * dt
         janela.blit(pew, laser)
-        
+        if laser.colliderect(player_pos):
+            life_count -= 1
+            pe.remove(laser)
+            if life_count == 0:
+                running = False
+
     # borda
     if player_pos.left < 0:
         player_pos.left = 0
@@ -135,9 +161,14 @@ while running:
 
     # contador de tempo
     sec += dt
+    minutes += 1
     count = int(sec)
-    text = font.render('' + str(count), True, (255, 255, 255))
-    janela.blit(text, (25,25))
+    counter_text = counter_font.render('Tempo: ' + str(count), True, (255, 255, 255))
+    janela.blit(counter_text, (25,25))
+
+    # contador de pontos
+    score_text = score_font.render("Pontos: " + str(score), True, (255, 255, 255))
+    janela.blit(score_text, (570, 25))
 
     # vida
     for c in range(life_count):
