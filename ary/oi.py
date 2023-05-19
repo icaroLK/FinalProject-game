@@ -58,6 +58,12 @@ pew_hitbox = pew.get_rect()
 score = 0
 score_font = pygame.font.Font("ary/Minecraft.ttf", 30)
 
+# game over
+def game_over():
+    end_font = pygame.font.Font("ary/Minecraft.ttf", 120)
+    end_text = end_font.render("Game Over", True, (255, 0, 0))
+    end_rect = end_text.get_rect(center=( l / 2, h / 2))
+
 # looping principal
 while running:
     dt = clock.tick(60) / 1000 
@@ -174,6 +180,8 @@ while running:
     for c in range(life_count):
         janela.blit(life, (c*40+1130,25))
 
+
     pygame.display.flip()
 
-pygame.quit()
+
+# pygame.quit()
