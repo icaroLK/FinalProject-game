@@ -59,10 +59,7 @@ score = 0
 score_font = pygame.font.Font("ary/Minecraft.ttf", 30)
 
 # game over
-def game_over():
-    end_font = pygame.font.Font("ary/Minecraft.ttf", 120)
-    end_text = end_font.render("Game Over", True, (255, 0, 0))
-    end_rect = end_text.get_rect(center=( l / 2, h / 2))
+end_font = pygame.font.Font("ary/Minecraft.ttf", 120)
 
 # looping principal
 while running:
@@ -106,7 +103,9 @@ while running:
     janela.blit(superficie, (0, 0))
     janela.blit(player, player_pos)
     # pygame.draw.rect(janela, (255, 0, 0, 100), player_pos, width=1)
-    
+    end_text = end_font.render("Game Over", True, (255, 0, 0))
+    end_rect = end_text.get_rect(center=( l / 2, h / 2))
+
     # tiro
     for tiro in p:
         tiro.x += 600 * dt
@@ -119,6 +118,7 @@ while running:
                 score += 1
                 if score == 30:
                     running = False
+                    
     # inimigo
     time = pygame.time.get_ticks() / 1000
     for enemy_pos in enemies:
@@ -179,9 +179,8 @@ while running:
     # vida
     for c in range(life_count):
         janela.blit(life, (c*40+1130,25))
-
+        
 
     pygame.display.flip()
 
-
-# pygame.quit()
+pygame.quit()
