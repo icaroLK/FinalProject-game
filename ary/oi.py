@@ -18,14 +18,14 @@ back_vel = 1000
 # jogador
 player = pygame.image.load("ary/imagens/nave.png")
 player_pos = player.get_rect(center=(l / 2, h / 2))
-player_vel = 400
+player_vel = 500
 player_hitbox = player.get_rect()
 
 # inimigos
 enemies = []
 enemy = pygame.image.load("ary/imagens/enemy.png")
 enemy_pos = enemy.get_rect()
-enemy_vel = 500
+enemy_vel = 600
 enemy_dt = 2
 last_enemy = 0 
 enemy_hitbox = enemy.get_rect()
@@ -147,7 +147,7 @@ while running:
         last_pew = time
 
     for laser in pe:
-        laser.x -= 950 * dt
+        laser.x -= 1200 * dt
         janela.blit(pew, laser)
         if laser.colliderect(player_pos):
             life_count -= 1
