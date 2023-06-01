@@ -11,19 +11,19 @@ pygame.display.set_caption("Joguinho")
 running = True
 
 # fundo do jogo
-background = pygame.image.load("ary/imagens/espaco.png")
+background = pygame.image.load("old/ary/imagens/espaco.png")
 back_pos = 0
 back_vel = 1000
 
 # jogador
-player = pygame.image.load("ary/imagens/nave.png")
+player = pygame.image.load("old/ary/imagens/nave.png")
 player_pos = player.get_rect(center=(l / 2, h / 2))
 player_vel = 500
 player_hitbox = player.get_rect()
 
 # inimigos
 enemies = []
-enemy = pygame.image.load("ary/imagens/enemy.png")
+enemy = pygame.image.load("old/ary/imagens/enemy.png")
 enemy_pos = enemy.get_rect()
 enemy_vel = 600
 enemy_dt = 2
@@ -31,35 +31,35 @@ last_enemy = 0
 enemy_hitbox = enemy.get_rect()
 
 # contador de vidas
-life = pygame.image.load("ary/imagens/coracao.png")
+life = pygame.image.load("old/ary/imagens/coracao.png")
 life_count = 3
 
 # contador de tempo
 sec = 0
 count = 0
 minutes = 0
-counter_font = pygame.font.Font("ary/Minecraft.ttf", 30)
+counter_font = pygame.font.Font("old/ary/Minecraft.ttf", 30)
 
 # projéteis
 p = []
-pickle = pygame.image.load("ary/imagens/pickle.png")
+pickle = pygame.image.load("old/ary/imagens/pickle.png")
 pickle_dt = 0.5
 last_pickle = 0
 pickle_hitbox = pickle.get_rect()
 
 # projétieis inimigos
 pe = []
-pew = pygame.image.load("ary/imagens/pew.png")
+pew = pygame.image.load("old/ary/imagens/pew.png")
 pew_dt = 1.5
 last_pew = 0
 pew_hitbox = pew.get_rect()
 
 # pontuação
 score = 0
-score_font = pygame.font.Font("ary/Minecraft.ttf", 30)
+score_font = pygame.font.Font("old/ary/Minecraft.ttf", 30)
 
 # game over
-end_font = pygame.font.Font("ary/Minecraft.ttf", 120)
+end_font = pygame.font.Font("old/ary/Minecraft.ttf", 120)
 
 # looping principal
 while running:

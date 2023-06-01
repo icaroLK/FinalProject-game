@@ -10,19 +10,19 @@ screen = pygame.display.set_mode((x, y))
 pygame.display.set_caption('Rick and fodase')
 
 # Carregar imagem de fundo e transformar o tamanho
-bg = pygame.image.load('icaro/tentarjogo/images/bg.jpg').convert_alpha()
+bg = pygame.image.load('old/icaro/tentarjogo/images/bg.jpg').convert_alpha()
 bg = pygame.transform.scale(bg, (x, y))
 
 # Carregar imagem do inimigo e transformar o tamanho
-inimigo = pygame.image.load('icaro/tentarjogo/images/velhote.png').convert_alpha()
+inimigo = pygame.image.load('old/icaro/tentarjogo/images/velhote.png').convert_alpha()
 inimigo = pygame.transform.scale(inimigo, (90, 63))
 
 # Carregar imagem do player e transformar o tamanho
-player = pygame.image.load('icaro/tentarjogo/images/navepixel.png').convert_alpha()
+player = pygame.image.load('old/icaro/tentarjogo/images/navepixel.png').convert_alpha()
 player = pygame.transform.scale(player, (90, 50))
 
 # Carregar imagem do tiro e transformar o tamanho
-tiro = pygame.image.load('icaro/tentarjogo/images/pickle.png').convert_alpha()
+tiro = pygame.image.load('old/icaro/tentarjogo/images/pickle.png').convert_alpha()
 tiro = pygame.transform.scale(tiro, (50, 50))
 
 # Posição inicial de cada elemento
@@ -44,11 +44,11 @@ triggered = False
 rodando = True
 
 # Escrever os pontos na tela
-font = pygame.font.SysFont('icaro/tentarjogo/fonts/Minecraft.ttf', 50)
+font = pygame.font.SysFont('old/icaro/tentarjogo/fonts/Minecraft.ttf', 50)
 
 
 #escrever os pontos na tela
-font = pygame.font.SysFont('icaro/tentarjogo/fonts/Minecraft.ttf', 50)
+font = pygame.font.SysFont('old/icaro/tentarjogo/fonts/Minecraft.ttf', 50)
 
 
 
