@@ -1,6 +1,5 @@
 import pygame
 import random
-from time import sleep
 
 pygame.init()
 
@@ -41,8 +40,22 @@ pickle = pygame.image.load("main/images/pickle.png")
 pickle_dt = 0.5
 last_pickle = 0
 
+# projétieis inimigos
+pe = []
+pew = pygame.image.load("ary/imagens/pew.png")
+pew_dt = 1.5
+last_pew = 0
+pew_hitbox = pew.get_rect()
+
+# boss
+boss_font = pygame.font.Font("main/Minecraft.ttf", 30)
+boss = pygame.image.load("main/imagens/maicris.png")
+boss_pos = boss.get_rect(center=(l+400, h / 2))
+boss_vel = 100
+
 # pontuação
 score = 0
+score_2 = 0
 score_font = pygame.font.Font("main/Minecraft.ttf", 30)
 
 # contador de vidas
@@ -54,6 +67,7 @@ sec = 0
 count = 0
 minutes = 0
 counter_font = pygame.font.Font("main/Minecraft.ttf", 30)
+
 
 while running:
     dt = clock.tick(60) / 1000 
@@ -96,6 +110,16 @@ while running:
     janela.blit(superficie, (0, 0))
     janela.blit(player, player_pos)
 
+    # borda
+    if player_pos.left < 0:
+        player_pos.left = 0
+    if player_pos.right > l:
+        player_pos.right = l
+    if player_pos.top < 0:
+        player_pos.top = 0
+    if player_pos.bottom > h:
+        player_pos.bottom = h 
+
     # tiro
     for tiro in p:
         tiro.x += 600 * dt
@@ -109,58 +133,99 @@ while running:
                 if score == 30:
                     running = False
 
-    # inimigo
     time = pygame.time.get_ticks() / 1000
-    for enemy_pos in enemies:
-        enemy_pos.x -= enemy_vel * dt
-        janela.blit(enemy, enemy_pos)
-    
-    enemy_hitbox.x = enemy_pos.x
-    enemy_hitbox.y = enemy_pos.y
 
-    if time - last_enemy > enemy_dt:
-        x = l
-        y = random.randint(25, h - enemy.get_width())
-        enemy_pos = enemy.get_rect(topleft=(x, y))
-        enemies.append(enemy_pos)
-        last_enemy = time
+    # fase FINAL
+    if score >= 2:
+        # novas variáveis
+        pew = pygame.image.load("main/imagens/zero.png")
+        zero_symb = pygame.image.load("main/imagens/zero.png")
+        python_symb = pygame.image.load("main/imagens/python.png")
+        score_2_text =  score_font.render("= " + str(score_2), True, (255, 255, 255))
 
-    # dano
-    for inimigo in enemies:
-        if inimigo.colliderect(player_pos):
-            life_count -= 1
-            enemies.remove(inimigo)
-            if life_count == 0:
-                if progress < 1:
-                    progress += 0.01
+        # contador de vidas
+        life_count = 5
+        for c in range(life_count):
+            janela.blit(life, (c*40+1130,25))
 
-                running = False
+        # boss
+        boss_text = boss_font.render(f"BOSS! Desvie de notas ZERO e colete PYTHONS para vencer!", True, (255, 255, 255))
+        janela.blit(boss_text, (25, 25))
+        if boss_pos.x > 900:
+            boss_pos.x -= boss_vel * dt
+            janela.blit(boss, boss_pos)
 
-    # borda
-    if player_pos.left < 0:
-        player_pos.left = 0
-    if player_pos.right > l:
-        player_pos.right = l
-    if player_pos.top < 0:
-        player_pos.top = 0
-    if player_pos.bottom > h:
-        player_pos.bottom = h  
+        # tela
+        janela.blit(boss, boss_pos)
+        janela.blit(python_symb, (25, 120))
+        janela.blit(score_2_text, (80, 130))
 
-    # contador de tempo
-    sec += dt
-    minutes += 1
-    count = int(sec)
-    counter_text = counter_font.render('Tempo: ' + str(count), True, (255, 255, 255))
-    janela.blit(counter_text, (25,25))
 
-    # contador de pontos
-    score_text = score_font.render("Pontos: " + str(score), True, (255, 255, 255))
-    janela.blit(score_text, (570, 25))
+    # fase 1
+    if score < 2:
+        # inimigo
+        for enemy_pos in enemies:
+            enemy_pos.x -= enemy_vel * dt
+            janela.blit(enemy, enemy_pos)
+        
+        enemy_hitbox.x = enemy_pos.x
+        enemy_hitbox.y = enemy_pos.y
 
-    # vida
-    for c in range(life_count):
-        janela.blit(life, (c*40+1130,25))
+        if time - last_enemy > enemy_dt:
+            x = l
+            y = random.randint(25, h - enemy.get_width())
+            enemy_pos = enemy.get_rect(topleft=(x, y))
+            enemies.append(enemy_pos)
+            last_enemy = time
+
+        # fase 2
+        if score >= 1:
+            background = pygame.image.load("main/imagens/espaco.png")
+            pickle = pygame.image.load("main/imagens/pickle.png")
+            enemy = pygame.image.load("main/imagens/enemy.png")
+
+            # tiro inimigo
+            if time - last_pew > pew_dt:
+                tiro_inimigo = pygame.Rect(enemy_pos.left, enemy_pos.centery - 15, 5, 10)
+                pe.append(tiro_inimigo)
+                last_pew = time
+
+            for laser in pe:
+                laser.x -= 1200 * dt
+                janela.blit(pew, laser)
+                if laser.colliderect(player_pos):
+                    life_count -= 1
+                    pe.remove(laser)
+                    if life_count == 0:
+                        running = False
+        
+        # dano
+        for inimigo in enemies:
+            if inimigo.colliderect(player_pos):
+                life_count -= 1
+                enemies.remove(inimigo)
+                if life_count == 0:
+                    if progress < 1:
+                        progress += 0.01
+                    running = False
+ 
+
+        # contador de tempo
+        sec += dt
+        minutes += 1
+        count = int(sec)
+        counter_text = counter_font.render('Tempo: ' + str(count), True, (255, 255, 255))
+        janela.blit(counter_text, (25,25))
+
+        # contador de pontos
+        score_text = score_font.render("Pontos: " + str(score), True, (255, 255, 255))
+        janela.blit(score_text, (570, 25))
+
+        # vida
+        for c in range(life_count):
+            janela.blit(life, (c*40+1130,25))
 
     pygame.display.flip()
 
 pygame.quit()
+
