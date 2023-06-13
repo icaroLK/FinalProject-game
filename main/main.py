@@ -1,7 +1,9 @@
 import pygame
+from pygame import mixer
 import random
 
 pygame.init()
+mixer.init()
 
 l = 1280
 h = 720
@@ -68,6 +70,9 @@ count = 0
 minutes = 0
 counter_font = pygame.font.Font("main/Minecraft.ttf", 30)
 
+# loading 
+mixer.music.load("main/sounds/soundtrack.mp3")
+mixer.music.play(-1)
 
 while running:
     dt = clock.tick(60) / 1000 
@@ -130,13 +135,13 @@ while running:
                 enemies.remove(enemy_pos)
                 p.remove(tiro)
                 score += 1
-                if score == 30:
+                if score == 40:
                     running = False
 
     time = pygame.time.get_ticks() / 1000
 
     # fase FINAL
-    if score >= 2:
+    if score >= 30:
         # novas variáveis
         pew = pygame.image.load("main/imagens/zero.png")
         zero_symb = pygame.image.load("main/imagens/zero.png")
@@ -162,7 +167,7 @@ while running:
 
 
     # fase 1
-    if score < 2:
+    if score < 30:
         # inimigo
         for enemy_pos in enemies:
             enemy_pos.x -= enemy_vel * dt
@@ -179,10 +184,10 @@ while running:
             last_enemy = time
 
         # fase 2
-        if score >= 1:
+        if score >= 15:
             background = pygame.image.load("main/imagens/espaco.png")
             pickle = pygame.image.load("main/imagens/pickle.png")
-            enemy = pygame.image.load("main/imagens/enemy.png")
+            enemy = pygame.image.load("main/images/whatugot.png")
 
             # tiro inimigo
             if time - last_pew > pew_dt:
