@@ -1,6 +1,7 @@
 import pygame
 from pygame import mixer
 import random
+import imageio
 
 pygame.init()
 mixer.init()
@@ -73,6 +74,8 @@ counter_font = pygame.font.Font("main/Minecraft.ttf", 30)
 # loading 
 mixer.music.load("main/sounds/soundtrack.mp3")
 mixer.music.play(-1)
+portal = pygame.image.load("main/images/portal.png")
+portal_pos = portal.get_rect()
 
 while running:
     dt = clock.tick(60) / 1000 
@@ -141,7 +144,7 @@ while running:
     time = pygame.time.get_ticks() / 1000
 
     # fase FINAL
-    if score >= 30:
+    if score >= 3:
         # novas variáveis
         pew = pygame.image.load("main/imagens/zero.png")
         zero_symb = pygame.image.load("main/imagens/zero.png")
@@ -151,7 +154,7 @@ while running:
         # contador de vidas
         life_count = 5
         for c in range(life_count):
-            janela.blit(life, (c*40+1130,25))
+            janela.blit(life, (c*40,680))
 
         # boss
         boss_text = boss_font.render(f"BOSS! Desvie de notas ZERO e colete PYTHONS para vencer!", True, (255, 255, 255))
@@ -162,12 +165,12 @@ while running:
 
         # tela
         janela.blit(boss, boss_pos)
-        janela.blit(python_symb, (25, 120))
-        janela.blit(score_2_text, (80, 130))
+        janela.blit(python_symb, (25, 80))
+        janela.blit(score_2_text, (80, 90))
 
 
     # fase 1
-    if score < 30:
+    if score < 3:
         # inimigo
         for enemy_pos in enemies:
             enemy_pos.x -= enemy_vel * dt
@@ -184,7 +187,8 @@ while running:
             last_enemy = time
 
         # fase 2
-        if score >= 15:
+        if score >= 2:
+
             background = pygame.image.load("main/imagens/espaco.png")
             pickle = pygame.image.load("main/imagens/pickle.png")
             enemy = pygame.image.load("main/images/whatugot.png")
