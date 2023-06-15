@@ -10,7 +10,7 @@ l = 1280
 h = 720
 janela = pygame.display.set_mode((l, h))
 clock = pygame.time.Clock()
-pygame.display.set_caption("Joguinho")
+pygame.display.set_caption("Rick and Foda-se")
 running = True
 
 # background
@@ -76,6 +76,7 @@ mixer.music.load("main/sounds/soundtrack.mp3")
 mixer.music.play(-1)
 portal = pygame.image.load("main/images/portal.png")
 portal_pos = portal.get_rect()
+state = 0
 
 while running:
     dt = clock.tick(60) / 1000 
@@ -144,7 +145,7 @@ while running:
     time = pygame.time.get_ticks() / 1000
 
     # fase FINAL
-    if score >= 3:
+    if score >= 30:
         # novas variáveis
         pew = pygame.image.load("main/imagens/zero.png")
         zero_symb = pygame.image.load("main/imagens/zero.png")
@@ -170,7 +171,8 @@ while running:
 
 
     # fase 1
-    if score < 3:
+    if score < 30:
+        
         # inimigo
         for enemy_pos in enemies:
             enemy_pos.x -= enemy_vel * dt
@@ -187,7 +189,7 @@ while running:
             last_enemy = time
 
         # fase 2
-        if score >= 2:
+        if score >= 20:
 
             background = pygame.image.load("main/imagens/espaco.png")
             pickle = pygame.image.load("main/imagens/pickle.png")
