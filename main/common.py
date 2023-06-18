@@ -164,19 +164,39 @@ def boss(diretorio, velocidade):
     pythons = []
     zeros = []
 
+def vidas(diret1, diret2):
+    global life, life2, life_count, life2_count
+
+    life = pygame.image.load(diret1)
+    life2 = pygame.image.load(diret2)
+    life_count = 3
+    life2_count = 5
+
+def pontos(inicial):
+    global score, score_2, score_font
+
+    score = inicial
+    score_2 = 0
+    score_font = pygame.font.Font("main/Minecraft.ttf", 30)
+
+
+
+
 
 
 pygame.init()
 mixer.init()
 
-
-ALTxLARG(720, 1280)
-clock()
-nome_jogo('Rick and fodase')
-
-
 running = True
 
+
+
+
+ALTxLARG(720, 1280)
+
+clock()
+
+nome_jogo('Rick and fodase')
 
 background('main/images/bg.jpg', 1000)
 
@@ -192,21 +212,26 @@ imagem_gameover("main/imagens/gameover.jpg")
 
 boss("main/imagens/maicris.png", 100)
 
+vidas("main/imagens/coracao.png", "main/imagens/coracao.png")
+
+pontos(0)
+
+
+
+
+
+
+
+
+
 
 # tiro final
 boss_final_baw = []
 baw = pygame.image.load("main/images/baw.png")
 
-# pontuação
-score = 0
-score_2 = 0
-score_font = pygame.font.Font("main/Minecraft.ttf", 30)
 
-# contador de vidas
-life = pygame.image.load("main/imagens/coracao.png")
-life2 = pygame.image.load("main/imagens/coracao.png")
-life_count = 3
-life2_count = 5
+
+
 
 # contador de tempo
 sec = 0
