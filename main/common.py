@@ -101,7 +101,6 @@ def clock():
     global clock
     clock = pygame.time.Clock()
 
-
 def background(diretorio, velocidade):
     global background, back_pos, back_vel
 
