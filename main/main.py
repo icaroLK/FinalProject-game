@@ -42,18 +42,20 @@ tela_game_over = pygame.image.load("main/imagens/gameover.jpg")
 progress = 0
 botao_go = pygame.image.load("main/images/reiniciar.png")
 go_pos = ((l - botao_go.get_width()) / 2, 570)
+fim = False
+good_final = pygame.image.load("main/images/yw.jpg")
 
 # player
 player = pygame.image.load("main/imagens/nave.png")
 player_pos = player.get_rect(center=(l / 2, h / 2))
-player_vel = 500
+player_vel = 600
 
 # inimigos
 enemies = []
 enemy = pygame.image.load("main/images/velhote.png")
 enemy_pos = enemy.get_rect()
 enemy_vel = 600
-enemy_dt = 2
+enemy_dt = 1.5
 last_enemy = 0 
 enemy_hitbox = enemy.get_rect()
 
@@ -74,6 +76,8 @@ pew_hitbox = pew.get_rect()
 boss_font = pygame.font.Font("main/Minecraft.ttf", 30)
 boss = pygame.image.load("main/imagens/maicris.png")
 boss_pos = boss.get_rect(center=(l+400, h / 2))
+boss_life = pygame.image.load("main/images/cor_boss.png")
+boss_life_count = 3
 boss_vel = 100
 last_pyt = 0
 pythons = []
@@ -82,6 +86,8 @@ zeros = []
 # tiro final
 boss_final_baw = []
 baw = pygame.image.load("main/images/baw.png")
+baw_dt = 5
+last_baw = 0
 
 # pontuação
 score = 0
@@ -105,13 +111,14 @@ counter_font = pygame.font.Font("main/Minecraft.ttf", 30)
 mixer.music.load("main/sounds/ricksoundtrack.mp3")
 mixer.music.play(-1)
 video = VideoFileClip("main/video/transition.mp4") 
+audio = video.audio
 frames = video.iter_frames()
 fps = 30
+audio = audio.set_fps(fps)
 continua = False
 
 while running:
     dt = clock.tick(60) / 1000 
-
     # fim do jogo 
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
@@ -137,13 +144,12 @@ while running:
                 pythons.clear()
                 zeros.clear()
                 game_over = False
-                pygame.mixer.music.play()
+
             if button_rect[0] < mouse_pos[0] < button_rect[0] + 100 and button_rect[1] < mouse_pos[1] < button_rect[1] + 50:
                 rodando = True
                 continua = True
 
     if transicao:
-        pygame.mixer.music.pause()
         continua = False
         try:
             frame = next(frames)
@@ -151,14 +157,13 @@ while running:
             frame_surface = pygame.surfarray.make_surface(frame)
             frame_surface = pygame.transform.flip(frame_surface, True, False)
             janela.blit(frame_surface, (0, 0))
-            pygame.display.update()
             clock.tick(fps)
+
         except StopIteration:
-            pygame.mixer.music.play()
             transicao = False
             rodando = True
             continua = True
-            
+
     if not rodando:
         janela.blit(background, [0, 0])
         janela.blit(shadow_text, shadow_text_rect)
@@ -169,13 +174,17 @@ while running:
 
     if continua:
         if rodando:
+            if fim:
+                janela.fill((0, 0, 0))
+                janela.blit(good_final, (0, 0)) 
+
             if game_over:
                 janela.fill((0, 0, 0))
                 janela.blit(tela_game_over, (0, 0)) 
                 janela.blit(botao_go, go_pos)
                 pygame.mixer.music.pause()
 
-            if not game_over:
+            if not game_over and not fim:
                 # movimentando o personagem
                 keys = pygame.key.get_pressed()
                 if keys[pygame.K_w] or keys[pygame.K_UP]:
@@ -213,17 +222,19 @@ while running:
                 time = pygame.time.get_ticks() / 1000
 
                 # fase FINAL
-                if score >= 3:
+                if score >= 30:
                     # novas variáveis
                     pew = pygame.image.load("main/imagens/zero.png")
                     python = pygame.image.load("main/imagens/python.png")
                     score_2_text =  score_font.render("= " + str(score_2), True, (255, 255, 255))
                     player_vel = 650
-                    pew_dt = 0.7
+                    pew_dt = 0.5
 
                     # boss
                     boss_text = boss_font.render(f"BOSS! Desvie de notas ZERO e colete PYTHONS para vencer!", True, (255, 255, 255))
+                    boss_text_2 = boss_font.render(f"Colete 5 PYTHONS para dar um TIRO.", True, (255, 255, 255))
                     janela.blit(boss_text, (25, 25))
+                    janela.blit(boss_text_2, (400, 80))
                     if boss_pos.x > 900:
                         boss_pos.x -= boss_vel * dt
                         janela.blit(boss, boss_pos)
@@ -255,19 +266,30 @@ while running:
                         if pitons.colliderect(player_pos):
                             score_2 += 1
                             pythons.remove(pitons)
-                            if score_2 % 5 == 0:
-                                # atirando os projéteis
-                                if keys[pygame.K_SPACE]:
-                                    final_baw = pygame.Rect(player_pos.right, player_pos.centery - 15, 5,10)
-                                    boss_final_baw.append(final_baw)
 
-                                for b in boss_final_baw:
-                                    b.x -= 1250 * dt
-                                    janela.blit(baw, b)
-                                    if b.colliderect(boss_pos):
-                                        life2_count -= 1
-                                        boss_final_baw.remove(b)
-                    
+                    if score_2 >= 5:
+                        # atirando os projéteis
+                        if keys[pygame.K_SPACE]:
+                            if time - last_baw > baw_dt:
+                                final_baw = pygame.Rect(player_pos.right, player_pos.centery - 15, 5, 10)
+                                boss_final_baw.append(final_baw)
+                                last_baw = time
+
+                        for b in boss_final_baw:
+                            b.x += 600 * dt
+                            janela.blit(baw, b)
+                            if b.colliderect(boss_pos):
+                                boss_life_count -= 1
+                                boss_final_baw.remove(b)
+                                score_2 = 0
+                                if boss_life_count == 0:
+                                    fim = True
+
+                    # contador de vidas do boss
+                    for c in range(boss_life_count):
+                        life_pos = c*40+800, 680
+                        janela.blit(boss_life, life_pos)
+
                     # tela
                     janela.blit(boss, boss_pos)
                     janela.blit(python, (25, 80))
@@ -279,7 +301,7 @@ while running:
                         janela.blit(life, life_pos)
 
                 # fase 1
-                if score < 3:
+                if score < 30:
                     # atirando os projéteis
                     if keys[pygame.K_SPACE]:
                         time = pygame.time.get_ticks() / 1000
@@ -315,7 +337,7 @@ while running:
                         last_enemy = time
 
                     # fase 2
-                    if score >= 2:
+                    if score >= 15:
                         transicao = True
                         background = pygame.image.load('main/imagens/espaco.png')
                         enemy = pygame.image.load('main/images/whatugot.png')
