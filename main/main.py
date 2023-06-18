@@ -144,7 +144,6 @@ while running:
                 pythons.clear()
                 zeros.clear()
                 game_over = False
-                pygame.mixer.music.play()
 
             if button_rect[0] < mouse_pos[0] < button_rect[0] + 100 and button_rect[1] < mouse_pos[1] < button_rect[1] + 50:
                 rodando = True
@@ -158,8 +157,8 @@ while running:
             frame_surface = pygame.surfarray.make_surface(frame)
             frame_surface = pygame.transform.flip(frame_surface, True, False)
             janela.blit(frame_surface, (0, 0))
-            pygame.display.update()
             clock.tick(fps)
+
         except StopIteration:
             transicao = False
             rodando = True
@@ -178,8 +177,6 @@ while running:
             if fim:
                 janela.fill((0, 0, 0))
                 janela.blit(good_final, (0, 0)) 
-                janela.blit(botao_go, go_pos)
-                pygame.mixer.music.pause()
 
             if game_over:
                 janela.fill((0, 0, 0))
@@ -187,7 +184,7 @@ while running:
                 janela.blit(botao_go, go_pos)
                 pygame.mixer.music.pause()
 
-            if not game_over:
+            if not game_over and not fim:
                 # movimentando o personagem
                 keys = pygame.key.get_pressed()
                 if keys[pygame.K_w] or keys[pygame.K_UP]:
