@@ -14,7 +14,7 @@ def iniciar_jogo():
     
 
     pygame.font.init()
-    font = pygame.font.Font('carol/Minecraft.ttf', 60)
+    font = pygame.font.Font('main/Minecraft.ttf', 60)
     text = font.render("Bem-vindo ao jogo Ricks", True, (255, 255,255))
     shadow_text = font.render("Bem-vindo ao jogo Ricks", True, (0, 0, 0))
 
@@ -31,9 +31,6 @@ def iniciar_jogo():
     button_font = pygame.font.Font('carol/Minecraft.ttf', 24)
     button_text = button_font.render("Iniciar", True, (0, 0, 0))
     button_text_rect = button_text.get_rect(center=button_rect.center)
-
-    def iniciar_jogo():
-        print("O jogo começou!")
 
     while True:
         for event in pygame.event.get():
@@ -53,3 +50,4 @@ def iniciar_jogo():
 
         pygame.display.update()
 
+iniciar_jogo()
