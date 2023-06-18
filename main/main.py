@@ -1,7 +1,6 @@
 import pygame
 from pygame import mixer
 import random
-import imageio
 
 pygame.init()
 mixer.init()
@@ -23,7 +22,7 @@ game_over = False
 tela_game_over = pygame.image.load("main/imagens/gameover.jpg")
 progress = 0
 botao_go = pygame.image.load("main/images/reiniciar.png")
-go_pos = ((l - botao_go.get_width()) / 2, 500)
+go_pos = ((l - botao_go.get_width()) / 2, 570)
 
 # player
 player = pygame.image.load("main/imagens/nave.png")
@@ -57,8 +56,13 @@ boss_font = pygame.font.Font("main/Minecraft.ttf", 30)
 boss = pygame.image.load("main/imagens/maicris.png")
 boss_pos = boss.get_rect(center=(l+400, h / 2))
 boss_vel = 100
+last_pyt = 0
 pythons = []
 zeros = []
+
+# tiro final
+boss_final_baw = []
+baw = pygame.image.load("main/images/baw.png")
 
 # pontuação
 score = 0
@@ -78,7 +82,7 @@ minutes = 0
 counter_font = pygame.font.Font("main/Minecraft.ttf", 30)
 
 # loading 
-mixer.music.load("main/sounds/soundtrack.mp3")
+mixer.music.load("main/sounds/ricksoundtrack.mp3")
 mixer.music.play(-1)
 portal = pygame.image.load("main/images/portal.png")
 portal_pos = portal.get_rect()
@@ -87,7 +91,7 @@ state = 0
 
 while running:
     dt = clock.tick(60) / 1000 
-    
+
     # fim do jogo 
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
@@ -103,11 +107,13 @@ while running:
                 enemy = pygame.image.load("main/images/velhote.png")
                 pew = pygame.image.load("ary/imagens/pew.png")
                 game_over = False
+                pygame.mixer.music.play()
 
     if game_over:
         janela.fill((0, 0, 0))
         janela.blit(tela_game_over, (0, 0)) 
-        janela.blit(botao_go, go_pos) 
+        janela.blit(botao_go, go_pos)
+        pygame.mixer.music.pause()
 
     if not game_over:
         # movimentando o personagem
@@ -144,29 +150,16 @@ while running:
         if player_pos.bottom > h:
             player_pos.bottom = h 
 
-        # tiro
-        for tiro in p:
-            tiro.x += 600 * dt
-            janela.blit(pickle, tiro)
-
-            for enemy_pos in enemies:
-                if tiro.colliderect(enemy_pos):
-                    enemies.remove(enemy_pos)
-                    p.remove(tiro)
-                    score += 1
-                    if score == 40:
-                        running = False
-
         time = pygame.time.get_ticks() / 1000
 
         # fase FINAL
         if score >= 3:
             # novas variáveis
             pew = pygame.image.load("main/imagens/zero.png")
-            python_pew = pygame.image.load("main/imagens/python.png")
-            zero_symb = pygame.image.load("main/imagens/zero.png")
-            python_symb = pygame.image.load("main/imagens/python.png")
+            python = pygame.image.load("main/imagens/python.png")
             score_2_text =  score_font.render("= " + str(score_2), True, (255, 255, 255))
+            player_vel = 650
+            pew_dt = 1
 
             # boss
             boss_text = boss_font.render(f"BOSS! Desvie de notas ZERO e colete PYTHONS para vencer!", True, (255, 255, 255))
@@ -177,12 +170,12 @@ while running:
 
             # zeros
             if time - last_pew > pew_dt:
-                zero = pygame.Rect(boss_pos.left, random.randint(75, 625) - 15, 5, 10)
+                zero = pygame.Rect(boss_pos.left, random.randint(75, 625), 5, 10)
                 zeros.append(zero)
                 last_pew = time
 
             for z in zeros:
-                z.x -= 1250 * dt
+                z.x -= 1350 * dt
                 janela.blit(pew, z)
                 if z.colliderect(player_pos):
                     life2_count -= 1
@@ -191,23 +184,33 @@ while running:
                         game_over = True
 
             # pythons
-            if time - last_pew > pew_dt:
-                python = pygame.Rect(boss_pos.left, random.randint(75, 625) - 15, 5, 10)
-                pythons.append(python)
-                last_pew = time
+            if time - last_pyt > pew_dt:
+                pyt = pygame.Rect(boss_pos.left, random.randint(75, 625), 5, 10)
+                pythons.append(pyt)
+                last_pyt = time
 
-            for pyt in pythons:
-                pyt.x -= 1250 * dt
-                janela.blit(python_pew, pyt)
-                if pyt.colliderect(player_pos):
+            for p in pythons:
+                p.x -= 1250 * dt
+                janela.blit(python, p)
+                if p.colliderect(player_pos):
                     score_2 += 1
-                    pythons.remove(pyt)
-                   # if score_2 == 5:
-                    #    pass
+                    pythons.remove(p)
+                    if score_2 % 5 == 0:
+                        # atirando os projéteis
+                        if keys[pygame.K_SPACE]:
+                            final_baw = pygame.Rect(player_pos.right, player_pos.centery - 15, 5,10)
+                            b.append(final_baw)
+
+                        for b in boss_final_baw:
+                            b.x -= 1250 * dt
+                            janela.blit(final_baw, b)
+                            if b.colliderect(boss_pos):
+                                life2_count -= 1
+                                boss_final_baw.remove(b)
             
             # tela
             janela.blit(boss, boss_pos)
-            janela.blit(python_symb, (25, 80))
+            janela.blit(python, (25, 80))
             janela.blit(score_2_text, (80, 90))
 
             # contador de vidas
@@ -224,6 +227,19 @@ while running:
                     projetil = pygame.Rect(player_pos.right, player_pos.centery - 15, 5,10)
                     p.append(projetil)
                     last_pickle = time
+            
+            # tiro
+            for tiritos in p:
+                tiritos.x += 600 * dt
+                janela.blit(pickle, tiritos)
+
+                for enemy_pos in enemies:
+                    if tiritos.colliderect(enemy_pos):
+                        enemies.remove(enemy_pos)
+                        p.remove(tiritos)
+                        score += 1
+                        if score == 40:
+                            running = False
 
             # inimigo
             for enemy_pos in enemies:
