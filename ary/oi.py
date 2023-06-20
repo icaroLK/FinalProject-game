@@ -185,3 +185,6 @@ def jogo_2():
         pygame.display.flip()
 
     pygame.quit()
+
+
+jogo_2()
