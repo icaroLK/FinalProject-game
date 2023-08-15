@@ -407,7 +407,6 @@ while running:
                 continua = True
 
     if transicao:
-        pygame.mixer.music.pause()
         continua = False
         try:
             frame = next(frames)
@@ -418,7 +417,6 @@ while running:
             pygame.display.update()
             clock.tick(fps)
         except StopIteration:
-            pygame.mixer.music.play()
             transicao = False
             rodando = True
             continua = True
